@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserRegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Main view
+Route::get('/', [UserRegisterController::class , 'viewUsers'])->name('home');
+//To Save New User
+Route::post('/save-new-user', [UserRegisterController::class , 'saveUser']);
+//To check email existst
+Route::get('/check-email/{value}', [UserRegisterController::class , 'checkEmail']);
+
