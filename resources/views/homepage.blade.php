@@ -20,10 +20,15 @@
 </header>
 <section class="py-3">
     <div class="container my-3">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" id="page_starts">
             <div class="col-lg-7">
                 <h2>User Registration</h2>
                 <hr>
+                <!-- fetch alerts -->
+                <div class="form-group">
+                    @include('components.alerts')
+                </div>
+
                 <form action="{{url('save-new-user')}}" method="POST" id="user_form">
                     @csrf
                     <div class="mb-3">
@@ -93,28 +98,49 @@
 <script>
 function submitForm(){
 
-    if( !$('#first_name').val() || !$('#last_name').val() ) {
+    if(!$('#first_name').val()) {
 
-        $('#name_err').text("Please enter your First name & Last name !");
+        $('#name_err').text("Please enter your First name !");
+        $('#first_name').css('border-color', 'red');
         $('html, body').animate({
-            scrollTop: $("#first_name").offset().top
+            scrollTop: $("#page_starts").offset().top
+        }, 500);
+
+    }else if(!$('#last_name').val()){
+
+        $('#name_err').text("Please enter your Last name !");
+        $('#last_name').css('border-color', 'red');
+
+        $('#first_name').css('border-color', '');
+        $('html, body').animate({
+            scrollTop: $("#page_starts").offset().top
         }, 500);
 
     }else if(!$('#email').val()){
 
         $('#name_err').text("");
+        $('#last_name').css('border-color', '');
+        $('#first_name').css('border-color', '');
+
         $('#email_err').text("Please enter the email !");
+        $('#email').css('border-color', 'red');
         $('html, body').animate({
-            scrollTop: $("#first_name").offset().top
+            scrollTop: $("#page_starts").offset().top
         }, 500);
 
     }else if(!$('#contact_number').val()){
 
         $('#name_err').text("");
         $('#email_err').text("");
+        $('#name_err').text("");
+        $('#last_name').css('border-color', '');
+        $('#first_name').css('border-color', '');
+        $('#email').css('border-color', '');
+
         $('#phone_err').text("Please enter the contact number !");
+        $('#contact_number').css('border-color', 'red');
         $('html, body').animate({
-            scrollTop: $("#first_name").offset().top
+            scrollTop: $("#page_starts").offset().top
         }, 500);
 
     }else if(!$('#dob').val()){
@@ -122,9 +148,15 @@ function submitForm(){
         $('#name_err').text("");
         $('#email_err').text("");
         $('#phone_err').text("");
+        $('#last_name').css('border-color', '');
+        $('#first_name').css('border-color', '');
+        $('#email').css('border-color', '');
+        $('#contact_number').css('border-color', '');
+
         $('#dob_err').text("Please provide your date of birth !");
+        $('#dob').css('border-color', 'red');
         $('html, body').animate({
-            scrollTop: $("#first_name").offset().top
+            scrollTop: $("#page_starts").offset().top
         }, 500);
 
     }else if(!$('#password').val()){
@@ -133,10 +165,17 @@ function submitForm(){
         $('#email_err').text("");
         $('#phone_err').text("");
         $('#dob_err').text("");
+        $('#last_name').css('border-color', '');
+        $('#first_name').css('border-color', '');
+        $('#email').css('border-color', '');
+        $('#contact_number').css('border-color', '');
+        $('#dob').css('border-color', '');
+
         $('#password_err').text("Please enter the password !");
+        $('#password').css('border-color', 'red');
         $('html, body').animate({
             scrollTop: $("#first_name").offset().top
-        }, 500);
+        }, 200);
 
     }else if(!$('#con_password').val()){
 
@@ -144,10 +183,18 @@ function submitForm(){
         $('#email_err').text("");
         $('#phone_err').text("");
         $('#dob_err').text("");
+        $('#last_name').css('border-color', '');
+        $('#first_name').css('border-color', '');
+        $('#email').css('border-color', '');
+        $('#contact_number').css('border-color', '');
+        $('#dob').css('border-color', '');
+        $('#password').css('border-color', '');
+
         $('#password_err').text("Please enter the confirm password !");
+        $('#con_password').css('border-color', 'red');
         $('html, body').animate({
             scrollTop: $("#first_name").offset().top
-        }, 500);
+        }, 200);
 
     }else if($('#password').val() !== $('#con_password').val()){
 
@@ -155,10 +202,18 @@ function submitForm(){
         $('#email_err').text("");
         $('#phone_err').text("");
         $('#dob_err').text("");
+        $('#last_name').css('border-color', '');
+        $('#first_name').css('border-color', '');
+        $('#email').css('border-color', '');
+        $('#contact_number').css('border-color', '');
+        $('#dob').css('border-color', '');
+        $('#password').css('border-color', '');
+        $('#con_password').css('border-color', '');
+
         $('#password_err').text("Passwords does not match !");
         $('html, body').animate({
             scrollTop: $("#first_name").offset().top
-        }, 500);
+        }, 200);
 
     }else {
         $('#name_err').text("");
