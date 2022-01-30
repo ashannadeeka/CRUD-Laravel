@@ -8,8 +8,8 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-flow: row-reverse;">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">New User</a></li>
-                <li class="nav-item"><a class="nav-link ml-4" href="#!">View Users</a></li>
+                <li class="nav-item"><a class="nav-link" aria-current="page" href="/">New User</a></li>
+                <li class="nav-item"><a class="nav-link ml-4 active" href="{{url('registered-users')}}">View Users</a></li>
             </ul>
         </div>
     </div>
@@ -21,67 +21,156 @@
 <section class="py-3">
     <div class="container my-3">
         <div class="row justify-content-center">
-            <div class="col-lg-7">
-                <h2>User Registration</h2>
+            <div class="col-lg-12">
+                <h2>Registered Users</h2>
                 <hr>
-                <form action="{{url('save-new-user')}}" method="POST" id="user_form">
-                    @csrf
-                    <div class="mb-3">
-                        <div class="row">
-                            <div class="col">
-                                <label for="first_name" class="form-label">First name</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                <!-- fetch alerts -->
+                <div class="form-group">
+                    @include('components.alerts')
+                </div>
+
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th scope="col">First name</th>
+                            <th scope="col">Last name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Contact no</th>
+                            <th scope="col">Date of birth</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Account type</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($users as $user)
+                        <tr>
+                            <td>{{$user->first_name}}</td>
+                            <td>{{$user->last_name}}</td>
+                            <td>{{$user->email}}</td>
+                            <td>{{$user->contact_number}}</td>
+                            <td>{{$user->dob}}</td>
+                            <td>{{$user->gender}}</td>
+                            <td>
+                                @if($user->role == 1)
+                                    <span class="badge badge-secondary px-2">user</span>
+                                @elseif($user->role == 0)
+                                    <span class="badge badge-primary px-2">admin</span>
+                                @endif
+                            </td>
+                            <td>
+                                <input type="button" class="btn btn-sm btn-success shadow-sm" value="Edit" data-toggle="modal" data-target="#editModal-{{$user->id}}">
+                                <input type="button" class="btn btn-sm btn-danger shadow-sm" value="Delete" data-toggle="modal" data-target="#deleteModal-{{$user->id}}">
+                            </td>
+
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal-{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="{{url('delete-user')}}" method="POST">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <p>Are you sure want to delete this Account ?</p>
+                                                    <input type="hidden" class="form-control" name="user_id" value="{{$user->id}}">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Yes</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <label for="last_name" class="form-label">Last name</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editModal-{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="{{url('edit-user')}}" method="POST">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <input type="hidden" name="user_id" value="{{$user->id}}">
+                                                <div class="mb-3">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <label for="first_name" class="form-label">First name</label>
+                                                            <input type="text" class="form-control" name="first_name" value="{{$user->first_name}}" required>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label for="last_name" class="form-label">Last name</label>
+                                                            <input type="text" class="form-control" name="last_name" value="{{$user->last_name}}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="email" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" name="email" value="{{$user->email}}" readonly>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="contact_number" class="form-label">Contact number</label>
+                                                    <input type="text" class="form-control" name="contact_number" value="{{$user->contact_number}}" maxlength="12" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="dob" class="form-label">Date of Birth</label>
+                                                    <input type="date" class="form-control col-6" name="dob" value="{{$user->dob}}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="gender" class="form-label">Gender</label><br>
+                                                    <select class="form-select col-4" name="gender">
+                                                        <option value="male" selected>Male</option>
+                                                        <option value="female" <?php if($user->gender == "female"){ echo "selected"; } ?> >Female</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="exampleFormControlInput1" class="form-label">User Role</label><br>
+                                                    <select class="form-select col-4" name="role">
+                                                        <option value="1" selected>User</option>
+                                                        <option value="0" <?php if($user->role=="0"){ echo "selected"; } ?>>Admin</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-check mb-3">
+                                                    <input type="checkbox" name="pwd_check" class="form-check-input exampleCheck1" onclick="isChecked()">
+                                                    <label class="form-check-label" for="exampleCheck1">Click to Change password</label>
+                                                </div>
+                                                <div class="password_section">
+                                                    <div class="mb-3">
+                                                        <label for="password" class="form-label">New Password</label>
+                                                        <input type="password" class="form-control" name="password">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="con_password" class="form-label">Confirm new Password</label>
+                                                        <input type="password" class="form-control" name="con_pwd">
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <span id="name_err" class="form-text text-danger text-sm"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-                        <span id="email_err" class="form-text text-danger text-sm"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contact_number" class="form-label">Contact number</label>
-                        <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="0711234567" required>
-                        <span id="phone_err" class="form-text text-danger text-sm"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="dob" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control col-6" id="dob" name="dob" required>
-                        <span id="dob_err" class="form-text text-danger text-sm"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="gender" class="form-label">Gender</label><br>
-                        <select class="form-select col-2" name="gender">
-                            <option value="male" selected>Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                    </div>
-                    <div class="mb-3">
-                        <label for="con_password" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="con_password">
-                        <span id="password_err" class="form-text text-danger text-sm"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Role</label><br>
-                        <select class="form-select col-2" name="role">
-                            <option value="1" selected>User</option>
-                            <option value="0">Admin</option>
-                        </select>
-                    </div>
-                    <hr>
-                    <div class="mb-3">
-                        <input type="button" class="btn btn-primary shadow px-2 col-3" value="Save" onclick="submitForm()">
-                    </div>
-                </form>
+
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -89,5 +178,21 @@
 
 @endsection
 @section('additional-scripts')
+<script>
+
+$( document ).ready(function() {
+    $('.password_section').hide();
+    isChecked();
+});
+
+function isChecked(){
+    if($(".exampleCheck1").prop('checked') == true){
+        $('.password_section').show();
+    }else {
+        $('.password_section').hide();
+    }
+}
+
+</script>
 @endsection
 

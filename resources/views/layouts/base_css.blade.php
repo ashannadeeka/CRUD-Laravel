@@ -6,4 +6,8 @@
     scroll-behavior: smooth;
     font-family: "Krub", sans-serif;
 }
+
+section{
+    background-color: rgb(245, 245, 247)
+}
 </style>

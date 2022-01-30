@@ -8,8 +8,8 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-flow: row-reverse;">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">New User</a></li>
-                <li class="nav-item"><a class="nav-link ml-4" href="#!">View Users</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">New User</a></li>
+                <li class="nav-item"><a class="nav-link ml-4" href="{{url('registered-users')}}">View Users</a></li>
             </ul>
         </div>
     </div>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="contact_number" class="form-label">Contact number</label>
-                        <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="0711234567" required>
+                        <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="0711234567" pattern="[0-9]+" maxlength="12" required>
                         <span id="phone_err" class="form-text text-danger text-sm"></span>
                     </div>
                     <div class="mb-3">
@@ -86,6 +86,7 @@
                     <hr>
                     <div class="mb-3">
                         <input type="button" class="btn btn-primary shadow px-2 col-3" value="Save" onclick="submitForm()">
+                        <input type="button" class="btn btn-light btn-outline-secondary float-right px-2 col-2" value="Reset Form" onclick="resetForm()">
                     </div>
                 </form>
             </div>
@@ -96,6 +97,33 @@
 @endsection
 @section('additional-scripts')
 <script>
+
+$(function(){
+  $("#contact_number").on('input', function (e) {
+    $(this).val($(this).val().replace(/[^0-9]/g, ''));
+  });
+});
+
+function resetForm(){
+
+    $('#name_err').text("");
+    $('#email_err').text("");
+    $('#phone_err').text("");
+    $('#dob_err').text("");
+    $('#password_err').text("");
+    $('#first_name').css('border-color', '');
+    $('#last_name').css('border-color', '');
+    $('#email').css('border-color', '');
+    $('#contact_number').css('border-color', '');
+    $('#dob').css('border-color', '');
+    $('#password').css('border-color', '');
+    $('#con_password').css('border-color', '');
+    $('#user_form').trigger("reset");
+    $('html, body').animate({
+        scrollTop: $("#page_starts").offset().top
+    }, 500);
+}
+
 function submitForm(){
 
     if(!$('#first_name').val()) {
