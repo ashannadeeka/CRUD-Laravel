@@ -56,7 +56,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="dob" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control col-6" id="dob" name="dob" required>
+                        <input type="date" class="form-control col-6" id="dob" name="dob" max="{{ now()->toDateString('Y-m-d') }}" required>
                         <span id="dob_err" class="form-text text-danger text-sm"></span>
                     </div>
                     <div class="mb-3">
@@ -97,6 +97,12 @@
 @endsection
 @section('additional-scripts')
 <script>
+
+$( document ).ready(function() {
+
+    // dob
+
+});
 
 $(function(){
   $("#contact_number").on('input', function (e) {

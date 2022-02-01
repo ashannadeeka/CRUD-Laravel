@@ -59,7 +59,7 @@
                                 @endif
                             </td>
                             <td>
-                                <input type="button" class="btn btn-sm btn-success shadow-sm" value="Edit" data-toggle="modal" data-target="#editModal-{{$user->id}}">
+                                <input type="button" class="btn btn-sm btn-success shadow-sm" value="Edit" onclick="showEditModal('{{$user->id}}')">
                                 <input type="button" class="btn btn-sm btn-danger shadow-sm" value="Delete" data-toggle="modal" data-target="#deleteModal-{{$user->id}}">
                             </td>
 
@@ -126,7 +126,7 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="dob" class="form-label">Date of Birth</label>
-                                                    <input type="date" class="form-control col-6" name="dob" value="{{$user->dob}}" required>
+                                                    <input type="date" class="form-control col-6" name="dob" max="{{ now()->toDateString('Y-m-d') }}" value="{{$user->dob}}" required>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="gender" class="form-label">Gender</label><br>
@@ -143,10 +143,10 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-check mb-3">
-                                                    <input type="checkbox" name="pwd_check" class="form-check-input exampleCheck1" onclick="isChecked()">
+                                                    <input type="checkbox" name="pwd_check" class="form-check-input exampleCheck1" id="check_id-{{$user->id}}" onclick="isChecked('{{$user->id}}')">
                                                     <label class="form-check-label" for="exampleCheck1">Click to Change password</label>
                                                 </div>
-                                                <div class="password_section">
+                                                <div id="password_section-{{$user->id}}">
                                                     <div class="mb-3">
                                                         <label for="password" class="form-label">New Password</label>
                                                         <input type="password" class="form-control" name="password">
@@ -181,16 +181,22 @@
 <script>
 
 $( document ).ready(function() {
-    $('.password_section').hide();
-    isChecked();
+
 });
 
-function isChecked(){
-    if($(".exampleCheck1").prop('checked') == true){
-        $('.password_section').show();
+function isChecked(id){
+    if($("#check_id-"+id).prop('checked') == true){
+        $('#password_section-'+id).show();
     }else {
-        $('.password_section').hide();
+        $('#password_section-'+id).hide();
     }
+}
+
+function showEditModal(id){
+
+    isChecked(id);
+    $('#editModal-'+id).modal('show');
+
 }
 
 </script>
