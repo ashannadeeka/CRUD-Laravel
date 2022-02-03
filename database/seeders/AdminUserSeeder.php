@@ -14,9 +14,9 @@ class AdminUserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->truncate();
+        DB::table('user_registers')->truncate();
 
-        DB::table('users')->insert([
+        DB::table('user_registers')->insert([
             'first_name' => 'Admin',
             'last_name' => 'Ashan',
             'dob' => '1995-01-11',
